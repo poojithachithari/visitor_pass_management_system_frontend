@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { deleteAppointment, deleteCheckLog, deletePass, deleteUser, deleteVisitor, getAllAppointments, getAllCheckLogs, getAllPasses, getAllUsers, getAllVisitors, updateAppointment, updatePass, updateUser, updateVisitor } from '../../services/api'
+import { deleteAppointment, deleteUser, deleteVisitor, getAllAppointments, getAllCheckLogs, getAllPasses, getAllUsers, getAllVisitors, updateAppointment, updatePass, updateUser, updateVisitor } from '../../services/api'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
 
@@ -51,8 +51,7 @@ const Dashboard = () => {
   const handleUserDelete = async (id) => { await deleteUser(id); fetchData() }
   const handleVisitorDelete = async (id) => { await deleteVisitor(id); fetchData() }
   const handleAppointmentDelete = async (id) => { await deleteAppointment(id); fetchData() }
-  const handlePassDelete = async (id) => { await deletePass(id); fetchData() }
-  const handleCheckLogDelete = async (id) => { await deleteCheckLog(id); fetchData() }
+  
 
   const handleRole = async (id) => {
     try { await updateUser(id, { role: newRole }); setEditingId(null); fetchData() }
@@ -176,7 +175,7 @@ const Dashboard = () => {
           <div className="overflow-x-auto">
             <table className="w-full bg-white rounded-xl shadow-sm overflow-hidden">
               <thead className="bg-green-50">
-                <tr>{['S.No', 'Name', 'Email', 'Phone', 'Address', 'Photo', 'Purpose', 'Host', 'Status', 'Actions'].map(h => <th key={h} className={thCls}>{h}</th>)}</tr>
+                <tr>{['S.No', 'Name', 'Email', 'Phone', 'Address', 'Photo', 'Purpose', 'Status', 'Actions'].map(h => <th key={h} className={thCls}>{h}</th>)}</tr>
               </thead>
               <tbody className="divide-y divide-gray-100">
                 {filteredVisitors.map((visitor, index) => editingId === visitor._id ? (
@@ -188,7 +187,7 @@ const Dashboard = () => {
                     <td className={tdCls}>{visitor.address}</td>
                     <td className={tdCls}><img src={visitor.photo} alt="photo" width={40} className="rounded" /></td>
                     <td className={tdCls}>{visitor.purposeOfVisit}</td>
-                    <td className={tdCls}>{visitor.hostId}</td>
+                  
                     <td className={tdCls}>
                       <select value={newStatus} onChange={(e) => setNewStatus(e.target.value)} className={selectCls}>
                         <option value='pending'>Pending</option>
@@ -210,7 +209,6 @@ const Dashboard = () => {
                     <td className={tdCls}>{visitor.address}</td>
                     <td className={tdCls}><img src={visitor.photo} alt="photo" width={40} className="rounded" /></td>
                     <td className={tdCls}>{visitor.purposeOfVisit}</td>
-                    <td className={tdCls}>{visitor.hostId}</td>
                     <td className={tdCls}><span className="px-2 py-0.5 bg-green-100 text-green-800 rounded-full text-xs">{visitor.status}</span></td>
                     <td className={tdCls}>
                       <button onClick={() => { setEditingId(visitor._id); setNewStatus(visitor.status) }} className={actionBtn + ' bg-blue-100 text-blue-700 hover:bg-blue-200'}>Edit</button>
@@ -337,7 +335,6 @@ const Dashboard = () => {
                     </td>
                     <td className={tdCls}>
                       <button onClick={() => { setEditingId(pass._id); setNewStatus(pass.status) }} className={actionBtn + ' bg-blue-100 text-blue-700 hover:bg-blue-200'}>Edit</button>
-                      <button onClick={() => handlePassDelete(pass._id)} className={actionBtn + ' bg-red-100 text-red-600 hover:bg-red-200'}>Delete</button>
                     </td>
                   </tr>
                 ))}
@@ -363,9 +360,6 @@ const Dashboard = () => {
                     <td className={tdCls}>{new Date(checklog.checkInTime).toLocaleString()}</td>
                     <td className={tdCls}>{checklog.checkOutTime ? new Date(checklog.checkOutTime).toLocaleString() : '—'}</td>
                     <td className={tdCls}>{new Date(checklog.date).toLocaleDateString()}</td>
-                    <td className={tdCls}>
-                      <button onClick={() => handleCheckLogDelete(checklog._id)} className={actionBtn + ' bg-red-100 text-red-600 hover:bg-red-200'}>Delete</button>
-                    </td>
                   </tr>
                 ))}
                 {checklogs.length === 0 && <tr><td colSpan={7} className="text-center py-6 text-gray-400">No data available</td></tr>}
