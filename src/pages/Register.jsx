@@ -29,6 +29,7 @@ const Register = () => {
       }
     } catch (err) {
       console.log('Error: ', err)
+      setError(err.response?.data?.message || 'Registration failed')
     }
   }
 
