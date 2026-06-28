@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { authRegister, createVisitor } from '../services/api'
+import { authRegister } from '../services/api'
 import { useNavigate, Link } from 'react-router-dom'
 
 const Register = () => {
@@ -15,28 +15,20 @@ const Register = () => {
   const [purposeOfVisit, setPurposeOfVisit] = useState('')
   const navigate = useNavigate()
 
-const handleSubmit = async (e) => {
+  const handleSubmit = async (e) => {
+    e.preventDefault()
     try {
-        e.preventDefault()
-        if (cpassword !== password) {
-            setError("Passwords don't match")
-            return
-        }
-        await authRegister({ userName, email, password, role })
-        if (role === 'visitor') {
-            try {
-                await createVisitor({ name: userName, email, phone, address, photo, purposeOfVisit })
-            } catch (visitorErr) {
-                console.log('Visitor creation failed:', visitorErr)
-                // user was created, still navigate
-            }
-        }
-        navigate('/login')
+      if (cpassword !== password) {
+        setError("Passwords don't match")
+        return
+      }
+      await authRegister({ userName, email, password, role, phone, address, photo, purposeOfVisit })
+      navigate('/login')
     } catch (err) {
-        console.log('Error:', err)
-        setError(err.response?.data?.message || 'Registration failed')
+      console.log('Error:', err)
+      setError(err.response?.data?.message || 'Registration failed')
     }
-}
+  }
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center gap-8">
       <div className="text-center mt-[-60px]">
